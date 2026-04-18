@@ -649,10 +649,10 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
 <!-- ═══════ TAB NAVIGATION ═══════ -->
 <nav class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('laporan')" id="tab-laporan">
-    <span class="tab-icon">📊</span> Laporan Penjualan
+    <span class="tab-icon"></span> Laporan Penjualan
   </button>
   <button class="tab-btn" onclick="switchTab('panduan')" id="tab-panduan">
-    <span class="tab-icon">📖</span> Panduan Setup
+    <span class="tab-icon"></span> Panduan Setup
     <span class="tab-num">Google Sheets API</span>
   </button>
 </nav>
@@ -724,8 +724,8 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
 
   <!-- Action Bar -->
   <div class="action-bar">
-    <button class="btn btn-success" onclick="saveToSheet()">💾 SIMPAN KE GOOGLE SHEETS</button>
-    <button class="btn btn-export"  onclick="exportAsImage()">📷 EXPORT LAPORAN (GAMBAR)</button>
+    <button class="btn btn-success" onclick="saveToSheet()">SIMPAN KE GOOGLE SHEETS</button>
+    <button class="btn btn-export"  onclick="exportAsImage()">EXPORT LAPORAN (GAMBAR)</button>
     <button class="btn btn-secondary" onclick="resetAll()">↺ RESET</button>
   </div>
 
@@ -840,12 +840,12 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
     <div id="overview" style="scroll-margin-top:120px;">
       <div class="sec-div"><div class="div-line"></div><div class="div-label">// Apa yang kamu butuhkan</div><div class="div-line"></div></div>
       <div class="ov-grid">
-        <div class="ov-card c-google"><span class="ov-icon">☁️</span><div class="ov-title">Google Account</div><div class="ov-desc">Akun Gmail biasa — tidak perlu akun berbayar.</div></div>
-        <div class="ov-card c-sheets"><span class="ov-icon">📊</span><div class="ov-title">Google Sheets</div><div class="ov-desc">Spreadsheet baru sebagai database penjualan harian.</div></div>
-        <div class="ov-card c-api"   ><span class="ov-icon">🔑</span><div class="ov-title">API Key</div><div class="ov-desc">Kunci akses gratis dari Google Cloud. Dibuat sekali, dipakai selamanya.</div></div>
+        <div class="ov-card c-google"><span class="ov-icon"></span><div class="ov-title">Google Account</div><div class="ov-desc">Akun Gmail biasa — tidak perlu akun berbayar.</div></div>
+        <div class="ov-card c-sheets"><span class="ov-icon"></span><div class="ov-title">Google Sheets</div><div class="ov-desc">Spreadsheet baru sebagai database penjualan harian.</div></div>
+        <div class="ov-card c-api"   ><span class="ov-icon"></span><div class="ov-title">API Key</div><div class="ov-desc">Kunci akses gratis dari Google Cloud. Dibuat sekali, dipakai selamanya.</div></div>
       </div>
       <div class="callout callout-info">
-        <div class="callout-icon">ℹ️</div>
+        <div class="callout-icon"></div>
         <div class="callout-body">
           <div class="callout-title">Biaya</div>
           <div class="callout-text">Google Sheets API <strong>gratis</strong>. Batas gratis <code>100 req/100 detik</code> — lebih dari cukup untuk laporan harian.</div>
@@ -861,7 +861,7 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
         <div><div class="step-category">Google Cloud Console</div><div class="step-title">Buat Google Cloud Project</div></div>
       </div>
       <div class="callout callout-info">
-        <div class="callout-icon">🌐</div>
+        <div class="callout-icon"></div>
         <div class="callout-body"><div class="callout-title">Buka URL ini</div><div class="callout-text">Pergi ke Google Cloud Console:</div></div>
       </div>
       <div class="url-box">
@@ -884,7 +884,7 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
       <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Buka menu APIs & Services → Library</div><div class="substep-desc">Di sidebar kiri:</div><div class="path-trail"><span class="path-item">☰ Menu</span><span class="path-arrow">›</span><span class="path-item">APIs & Services</span><span class="path-arrow">›</span><span class="path-item active-path">Library</span></div></div></div>
       <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Cari "Google Sheets API"</div><div class="substep-desc">Ketik <em>Google Sheets API</em> di kolom pencarian, lalu klik hasilnya.</div></div></div>
       <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Klik tombol "ENABLE"</div><div class="substep-desc">Klik <strong>ENABLE</strong> dan tunggu hingga status API aktif.</div></div></div>
-      <div class="callout callout-success"><div class="callout-icon">✅</div><div class="callout-body"><div class="callout-title">Konfirmasi</div><div class="callout-text">Kamu akan melihat tombol <strong>DISABLE</strong> dan statistik penggunaan — artinya API sudah aktif.</div></div></div>
+      <div class="callout callout-success"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Konfirmasi</div><div class="callout-text">Kamu akan melihat tombol <strong>DISABLE</strong> dan statistik penggunaan — artinya API sudah aktif.</div></div></div>
     </div>
 
     <!-- STEP 3 -->
@@ -902,7 +902,7 @@ td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green
         <div class="substep-desc">Salin key dan klik <strong>CLOSE</strong>.</div>
       </div></div>
       <div class="substep"><div class="substep-num">D</div><div><div class="substep-title">(Opsional) Batasi API Key</div><div class="substep-desc">Klik nama key → <strong>API restrictions</strong> → <strong>Restrict key</strong> → centang <strong>Google Sheets API</strong> → <strong>SAVE</strong>.</div></div></div>
-      <div class="callout callout-danger"><div class="callout-icon">🔐</div><div class="callout-body"><div class="callout-title">Keamanan</div><div class="callout-text"><strong>Jangan bagikan API Key ke orang lain.</strong> Jika bocor, hapus dan buat key baru. Sistem ini menyimpan key di <code>localStorage</code> browsermu saja.</div></div></div>
+      <div class="callout callout-danger"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Keamanan</div><div class="callout-text"><strong>Jangan bagikan API Key ke orang lain.</strong> Jika bocor, hapus dan buat key baru. Sistem ini menyimpan key di <code>localStorage</code> browsermu saja.</div></div></div>
     </div>
 
     <!-- STEP 4 -->
@@ -954,7 +954,7 @@ https://docs.google.com/spreadsheets/d/<span class="code-val">SPREADSHEET_ID_ADA
       </div></div>
       <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Klik "CONNECT" dan verifikasi</div><div class="substep-desc">Jika berhasil, muncul notifikasi hijau: <em>"✓ Terhubung ke: [nama sheet]"</em>. Konfigurasi tersimpan otomatis.</div></div></div>
       <div class="substep"><div class="substep-num">D</div><div><div class="substep-title">Input data → Klik "SIMPAN KE GOOGLE SHEETS"</div><div class="substep-desc">Data akan masuk ke Sheet1 dengan kolom: Tanggal, Waktu, Produk, Harga, Stok, Terjual, Sisa, Profit.</div></div></div>
-      <div class="callout callout-success"><div class="callout-icon">🎉</div><div class="callout-body"><div class="callout-title">Setup Selesai!</div><div class="callout-text">Sistem TERRAE TEA sudah terhubung. Setiap simpan akan otomatis terekam di spreadsheet dengan timestamp lengkap.</div></div></div>
+      <div class="callout callout-success"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Setup Selesai!</div><div class="callout-text">Sistem TERRAE TEA sudah terhubung. Setiap simpan akan otomatis terekam di spreadsheet dengan timestamp lengkap.</div></div></div>
 
       <!-- Quick Connect shortcut -->
       <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;margin-top:16px;">

@@ -1,1 +1,1337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TERRAE TEA — Sales & Setup System</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Serif+Display&family=Barlow+Condensed:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════ */
+:root {
+  --bg:       #0d0d0b;
+  --surface:  #141410;
+  --surface2: #1c1c17;
+  --surface3: #222219;
+  --border:   #2a2a22;
+  --border2:  #333328;
+  --accent:   #c8a84b;
+  --accent2:  #e8c96a;
+  --text:     #e8e4d4;
+  --muted:    #7a7868;
+  --dim:      #4a4a3a;
+  --red:      #c84b4b;
+  --green:    #4bc87a;
+  --cyan:     #4bb8c8;
+  --blue:     #6b8fd4;
+  --font-mono:    'Space Mono', monospace;
+  --font-display: 'DM Serif Display', serif;
+  --font-ui:      'Barlow Condensed', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 0%,   rgba(200,168,75,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(75,184,200,0.03) 0%, transparent 50%);
+}
 
+/* ═══════════════════════════════════════════
+   SCROLL PROGRESS
+═══════════════════════════════════════════ */
+.scroll-progress {
+  position:fixed; top:0; left:0;
+  height:2px; background:var(--accent);
+  transition:width 0.1s; z-index:200;
+  pointer-events:none;
+}
+
+/* ═══════════════════════════════════════════
+   GLOBAL HEADER
+═══════════════════════════════════════════ */
+.global-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 32px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  position:sticky; top:0; z-index:100;
+}
+.gh-brand {
+  display:flex; align-items:baseline; gap:12px;
+}
+.gh-name {
+  font-family:var(--font-display);
+  font-size:24px; color:var(--text); line-height:1;
+}
+.gh-sep { color:var(--border2); font-size:20px; }
+.gh-sub {
+  font-family:var(--font-mono);
+  font-size:9px; color:var(--muted);
+  letter-spacing:0.2em; text-transform:uppercase;
+}
+.gh-right {
+  display:flex; align-items:center; gap:16px;
+}
+.live-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(75,200,122,0.1);
+  border:1px solid rgba(75,200,122,0.3);
+  padding:4px 10px;
+  font-size:10px; font-family:var(--font-mono);
+  color:var(--green); letter-spacing:0.1em;
+}
+.live-dot {
+  width:6px; height:6px;
+  background:var(--green); border-radius:50%;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.4;transform:scale(0.8);}
+}
+#gh-date {
+  font-family:var(--font-mono); font-size:10px; color:var(--muted);
+}
+
+/* ═══════════════════════════════════════════
+   TAB NAVIGATION
+═══════════════════════════════════════════ */
+.tab-nav {
+  display:flex; align-items:stretch;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  padding:0 32px;
+  gap:0;
+}
+.tab-btn {
+  display:flex; align-items:center; gap:8px;
+  padding:14px 24px;
+  font-family:var(--font-ui);
+  font-size:13px; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--muted);
+  border:none; background:transparent;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:all 0.15s;
+  white-space:nowrap;
+}
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active {
+  color:var(--accent2);
+  border-bottom-color:var(--accent);
+}
+.tab-icon { font-size:15px; }
+.tab-num {
+  font-family:var(--font-mono); font-size:9px;
+  color:var(--dim); margin-left:4px;
+}
+
+/* ═══════════════════════════════════════════
+   TAB PANELS
+═══════════════════════════════════════════ */
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ═══════════════════════════════════════════
+   ── PAGE: LAPORAN PENJUALAN ──
+═══════════════════════════════════════════ */
+#page-laporan {
+  padding:28px 32px;
+}
+
+/* Config Panel */
+.config-panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  padding:14px 18px;
+  margin-bottom:22px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.config-label {
+  font-family:var(--font-mono); font-size:10px;
+  color:var(--accent); letter-spacing:0.2em; white-space:nowrap;
+}
+.config-input {
+  flex:1; min-width:180px;
+  background:var(--bg); border:1px solid var(--border);
+  color:var(--text); font-family:var(--font-mono);
+  font-size:11px; padding:8px 12px; outline:none;
+  transition:border-color 0.2s;
+}
+.config-input:focus { border-color:var(--accent); }
+.config-status {
+  font-family:var(--font-mono); font-size:10px;
+  padding:4px 10px; border:1px solid var(--border);
+  background:var(--bg); white-space:nowrap;
+}
+.config-status.connected { color:var(--green); border-color:rgba(75,200,122,0.3); }
+.config-status.disconnected { color:var(--muted); }
+
+/* Buttons */
+.btn {
+  font-family:var(--font-ui); font-size:13px; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase;
+  padding:9px 18px; border:none; cursor:pointer;
+  transition:all 0.15s; white-space:nowrap;
+}
+.btn-primary   { background:var(--accent);  color:#0d0d0b; }
+.btn-primary:hover  { background:var(--accent2); }
+.btn-secondary { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn-secondary:hover{ color:var(--text); border-color:var(--muted); }
+.btn-success   { background:var(--green);   color:#0d0d0b; }
+.btn-success:hover  { filter:brightness(1.1); }
+.btn-export    { background:var(--cyan);    color:#0d0d0b; }
+.btn-export:hover   { filter:brightness(1.1); }
+.btn-guide {
+  background:transparent; color:var(--accent);
+  border:1px solid var(--accent); font-size:11px;
+}
+.btn-guide:hover { background:rgba(200,168,75,0.08); }
+
+/* Summary Grid */
+.summary-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:10px; margin-bottom:20px;
+}
+@media(max-width:768px){ .summary-grid{grid-template-columns:repeat(2,1fr);} }
+.stat-card {
+  background:var(--surface); border:1px solid var(--border);
+  padding:14px; position:relative; overflow:hidden;
+}
+.stat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+}
+.stat-card.gold::before { background:var(--accent); }
+.stat-card.green::before{ background:var(--green);  }
+.stat-card.red::before  { background:var(--red);    }
+.stat-card.cyan::before { background:var(--cyan);   }
+.stat-label {
+  font-size:9px; font-family:var(--font-mono);
+  color:var(--muted); letter-spacing:0.15em;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.stat-value {
+  font-family:var(--font-display); font-size:24px;
+  line-height:1; color:var(--text);
+}
+.stat-card.gold  .stat-value { color:var(--accent2); }
+.stat-card.green .stat-value { color:var(--green);   }
+.stat-card.red   .stat-value { color:var(--red);     }
+.stat-card.cyan  .stat-value { color:var(--cyan);    }
+
+/* Info Strip */
+.info-strip {
+  background:rgba(200,75,75,0.08);
+  border:1px solid rgba(200,75,75,0.2);
+  padding:10px 16px; margin-bottom:20px;
+  display:flex; align-items:center; gap:10px; min-height:40px;
+}
+.info-strip-label {
+  font-family:var(--font-mono); font-size:10px;
+  color:var(--red); letter-spacing:0.2em; white-space:nowrap;
+}
+#habis-info { font-size:13px; font-weight:600; letter-spacing:0.04em; }
+
+/* Section Header */
+.section-hdr {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:10px;
+}
+.section-title {
+  font-family:var(--font-mono); font-size:10px;
+  letter-spacing:0.25em; color:var(--accent); text-transform:uppercase;
+}
+
+/* Table */
+.table-wrapper { overflow-x:auto; margin-bottom:20px; }
+table { width:100%; border-collapse:collapse; }
+thead tr {
+  background:var(--surface2); border-bottom:2px solid var(--accent);
+}
+thead th {
+  font-family:var(--font-mono); font-size:9px;
+  letter-spacing:0.2em; color:var(--accent);
+  text-transform:uppercase; padding:11px 14px;
+  text-align:left; white-space:nowrap;
+}
+thead th:last-child { text-align:right; }
+tbody tr { border-bottom:1px solid var(--border); transition:background 0.1s; }
+tbody tr:hover { background:rgba(255,255,255,0.02); }
+tbody td { padding:12px 14px; font-size:14px; font-weight:600; vertical-align:middle; }
+td.produk-name { font-family:var(--font-display); font-size:16px; }
+td.harga-col   { font-family:var(--font-mono); font-size:12px; color:var(--muted); }
+td.profit-col  { font-family:var(--font-mono); font-size:13px; color:var(--green); text-align:right; }
+.stok-input, .terjual-input {
+  background:var(--bg); border:1px solid var(--border);
+  color:var(--text); font-family:var(--font-mono);
+  font-size:14px; padding:5px 8px; width:74px;
+  text-align:center; outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+}
+.stok-input:focus,.terjual-input:focus {
+  border-color:var(--accent); box-shadow:0 0 0 2px rgba(200,168,75,0.1);
+}
+.stok-input::-webkit-inner-spin-button,
+.stok-input::-webkit-outer-spin-button,
+.terjual-input::-webkit-inner-spin-button,
+.terjual-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+.stok-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:10px; font-family:var(--font-mono);
+  padding:2px 5px; border-radius:2px; margin-top:3px;
+}
+.badge-ok    { background:rgba(75,200,122,0.1); color:var(--green); }
+.badge-low   { background:rgba(200,168,75,0.1); color:var(--accent2); }
+.badge-habis { background:rgba(200,75,75,0.15); color:var(--red);
+               animation:blinkbadge 1s step-end infinite; }
+@keyframes blinkbadge{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* Action Bar */
+.action-bar { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+
+/* Kondisi Penjualan */
+.kondisi-box {
+  background:var(--surface); border:1px solid var(--border);
+  padding:18px; margin-bottom:20px;
+}
+.box-header {
+  font-family:var(--font-mono); font-size:9px;
+  letter-spacing:0.25em; color:var(--accent);
+  text-transform:uppercase; margin-bottom:12px;
+  padding-bottom:8px; border-bottom:1px solid var(--border);
+}
+#kondisi-text { font-size:14px; line-height:1.7; color:var(--text); letter-spacing:0.02em; }
+.kondisi-highlight { color:var(--accent2); font-weight:700; }
+.kondisi-good { color:var(--green);  font-weight:700; }
+.kondisi-warn { color:var(--accent2);font-weight:700; }
+.kondisi-bad  { color:var(--red);    font-weight:700; }
+
+/* Report Snapshot */
+#report-snapshot {
+  background:var(--surface); border:1px solid var(--border);
+  padding:24px; margin-bottom:20px; position:relative;
+}
+.report-watermark {
+  position:absolute; top:14px; right:18px;
+  font-family:var(--font-mono); font-size:9px;
+  color:var(--muted); letter-spacing:0.15em;
+}
+.report-title-block {
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px; margin-bottom:14px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+}
+.report-brand  { font-family:var(--font-display); font-size:22px; color:var(--text); }
+.report-date-block { font-family:var(--font-mono); font-size:10px; color:var(--muted); text-align:right; }
+.report-table  { width:100%; border-collapse:collapse; margin-bottom:14px; font-size:12px; }
+.report-table th {
+  font-family:var(--font-mono); font-size:8px; letter-spacing:0.15em;
+  color:var(--accent); text-transform:uppercase;
+  padding:7px 10px; text-align:left; border-bottom:1px solid var(--accent);
+}
+.report-table td {
+  padding:7px 10px; border-bottom:1px solid rgba(255,255,255,0.04);
+  font-family:var(--font-ui); font-size:12px; font-weight:600;
+}
+.report-table td:last-child { text-align:right; font-family:var(--font-mono); color:var(--green); }
+.report-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:12px; border-top:1px solid var(--border); flex-wrap:wrap; gap:6px;
+}
+.report-kondisi { font-size:12px; color:var(--text); }
+.report-total   { font-family:var(--font-mono); font-size:12px; color:var(--accent2); }
+
+/* Log */
+.log-box {
+  background:var(--surface); border:1px solid var(--border);
+  padding:18px; margin-bottom:20px;
+}
+#log-list {
+  max-height:120px; overflow-y:auto;
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+.log-entry {
+  display:flex; gap:10px; font-family:var(--font-mono);
+  font-size:10px; padding:3px 0; border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.log-time { color:var(--muted); white-space:nowrap; }
+.log-msg  { color:var(--text); }
+.log-success .log-msg { color:var(--green);  }
+.log-warn    .log-msg { color:var(--accent2);}
+.log-error   .log-msg { color:var(--red);    }
+
+/* ═══════════════════════════════════════════
+   ── PAGE: PANDUAN SETUP ──
+   (sidebar + main layout)
+═══════════════════════════════════════════ */
+#page-panduan {
+  display:grid; grid-template-columns:248px 1fr; min-height:calc(100vh - 108px);
+}
+
+/* Sidebar */
+.sidebar {
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:28px 0;
+  position:sticky; top:108px; height:calc(100vh - 108px);
+  overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+.sb-brand {
+  padding:0 20px 20px; border-bottom:1px solid var(--border); margin-bottom:20px;
+}
+.sb-label {
+  font-family:var(--font-mono); font-size:9px;
+  letter-spacing:0.3em; color:var(--accent);
+  text-transform:uppercase; display:block; margin-bottom:3px;
+}
+.sb-title { font-family:var(--font-display); font-size:20px; color:var(--text); line-height:1.1; }
+.sb-sub   { font-family:var(--font-mono); font-size:8px; color:var(--muted); margin-top:4px; letter-spacing:0.1em; }
+.nav-sec-label {
+  font-family:var(--font-mono); font-size:8px;
+  letter-spacing:0.25em; color:var(--dim);
+  text-transform:uppercase; padding:0 20px 6px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 20px; cursor:pointer;
+  text-decoration:none; border-left:2px solid transparent;
+  transition:all 0.15s;
+}
+.nav-item:hover { background:rgba(200,168,75,0.05); border-left-color:var(--accent); }
+.nav-item.active { background:rgba(200,168,75,0.08); border-left-color:var(--accent); }
+.nav-num  { font-family:var(--font-mono); font-size:9px; color:var(--accent); min-width:16px; }
+.nav-text { font-size:12px; font-weight:600; color:var(--text); letter-spacing:0.02em; line-height:1.3; }
+.nav-badge { margin-left:auto; font-family:var(--font-mono); font-size:8px; padding:1px 5px; border-radius:2px; }
+.badge-free { background:rgba(75,200,122,0.15); color:var(--green);  }
+.badge-req  { background:rgba(200,168,75,0.15); color:var(--accent2);}
+.badge-key  { background:rgba(75,184,200,0.15); color:var(--cyan);   }
+.sb-footer  {
+  padding:20px; border-top:1px solid var(--border); margin-top:20px;
+  font-family:var(--font-mono); font-size:8px; color:var(--dim); letter-spacing:0.1em;
+}
+
+/* Guide Main */
+.guide-main { padding:40px 48px; max-width:820px; }
+@media(max-width:900px){
+  #page-panduan{ grid-template-columns:1fr; }
+  .sidebar{ position:static; height:auto; }
+  .guide-main{ padding:28px 20px; }
+}
+
+/* Page Header */
+.ph-eyebrow {
+  font-family:var(--font-mono); font-size:9px;
+  letter-spacing:0.3em; color:var(--accent);
+  text-transform:uppercase; margin-bottom:8px;
+  display:flex; align-items:center; gap:10px;
+}
+.ph-eyebrow::before { content:''; width:28px; height:1px; background:var(--accent); }
+.page-title {
+  font-family:var(--font-display); font-size:42px;
+  line-height:1; color:var(--text); margin-bottom:10px;
+}
+.page-desc { font-size:15px; color:var(--muted); line-height:1.6; max-width:520px; }
+.time-est {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  padding:7px 14px; margin-top:14px;
+  font-family:var(--font-mono); font-size:10px; color:var(--muted);
+}
+.time-est span { color:var(--accent2); }
+
+/* Overview cards */
+.ov-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:10px; margin:24px 0 48px;
+}
+@media(max-width:600px){ .ov-grid{grid-template-columns:1fr;} }
+.ov-card {
+  background:var(--surface); border:1px solid var(--border);
+  padding:16px; position:relative; overflow:hidden;
+}
+.ov-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.ov-card.c-google::after { background:var(--blue);  }
+.ov-card.c-sheets::after { background:var(--green); }
+.ov-card.c-api::after    { background:var(--cyan);  }
+.ov-icon  { font-size:20px; margin-bottom:8px; display:block; }
+.ov-title { font-family:var(--font-mono); font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text); margin-bottom:4px; }
+.ov-desc  { font-size:12px; color:var(--muted); line-height:1.5; }
+
+/* Divider */
+.sec-div {
+  display:flex; align-items:center; gap:14px; margin:44px 0 28px;
+}
+.div-line  { flex:1; height:1px; background:var(--border); }
+.div-label { font-family:var(--font-mono); font-size:8px; letter-spacing:0.3em; color:var(--dim); text-transform:uppercase; white-space:nowrap; }
+
+/* Step Section */
+.step-section { margin-bottom:56px; scroll-margin-top:120px; }
+.step-hdr {
+  display:flex; align-items:flex-start; gap:16px;
+  margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);
+}
+.step-num-block {
+  flex-shrink:0; width:44px; height:44px;
+  background:var(--surface2); border:1px solid var(--border2);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.sn-label { font-family:var(--font-mono); font-size:7px; color:var(--accent); letter-spacing:0.1em; }
+.sn-num   { font-family:var(--font-display); font-size:20px; line-height:1; color:var(--text); }
+.step-category { font-family:var(--font-mono); font-size:8px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; margin-bottom:3px; }
+.step-title    { font-family:var(--font-display); font-size:24px; color:var(--text); line-height:1.1; }
+
+/* Substep */
+.substep {
+  display:flex; gap:14px; margin-bottom:16px;
+  padding:14px; background:var(--surface);
+  border:1px solid var(--border); border-left:2px solid var(--border2);
+  transition:border-left-color 0.2s;
+}
+.substep:hover { border-left-color:var(--accent); }
+.substep-num {
+  flex-shrink:0; width:22px; height:22px;
+  background:var(--surface2); border:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:9px; color:var(--accent); margin-top:1px;
+}
+.substep-title { font-size:14px; font-weight:700; letter-spacing:0.04em; color:var(--text); margin-bottom:5px; }
+.substep-desc  { font-size:13px; color:var(--muted); line-height:1.6; }
+.substep-desc strong { color:var(--text); font-weight:700; }
+.substep-desc em     { color:var(--accent2); font-style:normal; font-family:var(--font-mono); font-size:11px; }
+
+/* Code Block */
+.code-block {
+  background:#080808; border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  padding:14px 18px; margin:10px 0;
+  font-family:var(--font-mono); font-size:11px;
+  color:var(--accent2); letter-spacing:0.04em;
+  overflow-x:auto; white-space:pre; position:relative;
+}
+.code-comment { color:var(--muted); }
+.code-key { color:var(--cyan); }
+.code-val { color:var(--green); }
+
+/* Callout */
+.callout {
+  display:flex; gap:12px; padding:14px; margin:14px 0;
+}
+.callout-warn    { background:rgba(200,168,75,0.07); border:1px solid rgba(200,168,75,0.25); border-left:3px solid var(--accent); }
+.callout-info    { background:rgba(75,184,200,0.07); border:1px solid rgba(75,184,200,0.2);  border-left:3px solid var(--cyan);   }
+.callout-danger  { background:rgba(200,75,75,0.07);  border:1px solid rgba(200,75,75,0.2);   border-left:3px solid var(--red);    }
+.callout-success { background:rgba(75,200,122,0.07); border:1px solid rgba(75,200,122,0.2);  border-left:3px solid var(--green);  }
+.callout-icon  { font-size:16px; flex-shrink:0; margin-top:1px; }
+.callout-title { font-family:var(--font-mono); font-size:9px; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:5px; }
+.callout-warn    .callout-title { color:var(--accent2); }
+.callout-info    .callout-title { color:var(--cyan);    }
+.callout-danger  .callout-title { color:var(--red);     }
+.callout-success .callout-title { color:var(--green);   }
+.callout-text { font-size:12px; color:var(--muted); line-height:1.6; }
+.callout-text strong { color:var(--text); }
+.callout-text code  { font-family:var(--font-mono); font-size:10px; background:rgba(255,255,255,0.06); padding:1px 4px; color:var(--accent2); }
+
+/* Path trail */
+.path-trail {
+  display:flex; align-items:center; gap:5px; flex-wrap:wrap;
+  margin:8px 0; padding:8px 12px;
+  background:var(--surface2); border:1px solid var(--border);
+}
+.path-item  { font-family:var(--font-mono); font-size:10px; color:var(--text); }
+.path-arrow { color:var(--accent); font-size:11px; }
+.path-item.active-path { color:var(--accent2); font-weight:700; }
+
+/* URL Box */
+.url-box { display:flex; margin:10px 0; }
+.url-label {
+  background:var(--accent); color:#0d0d0b;
+  font-family:var(--font-mono); font-size:9px; font-weight:700;
+  letter-spacing:0.15em; padding:9px 12px; white-space:nowrap;
+}
+.url-text {
+  flex:1; background:#080808; border:1px solid var(--border); border-left:none;
+  font-family:var(--font-mono); font-size:10px; color:#8fb4e8;
+  padding:9px 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.url-copy {
+  background:var(--surface2); border:1px solid var(--border); border-left:none;
+  color:var(--muted); font-family:var(--font-mono); font-size:9px;
+  padding:9px 12px; cursor:pointer; transition:all 0.15s; white-space:nowrap;
+}
+.url-copy:hover { color:var(--text); background:var(--surface3); }
+
+/* Checklist */
+.checklist { list-style:none; margin:12px 0; }
+.checklist li {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:13px; color:var(--text); letter-spacing:0.02em; line-height:1.5;
+}
+.checklist li:last-child { border-bottom:none; }
+.check-box {
+  width:16px; height:16px; border:1px solid var(--border2);
+  background:var(--surface2); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--green); margin-top:1px; cursor:pointer; transition:all 0.15s;
+}
+.check-box:hover        { border-color:var(--accent); }
+.check-box.checked      { background:rgba(75,200,122,0.1); border-color:var(--green); }
+.check-label.done       { text-decoration:line-through; color:var(--muted); }
+
+/* FAQ */
+.faq-section {
+  background:var(--surface); border:1px solid var(--border);
+  border-top:2px solid var(--accent); padding:28px; margin-bottom:40px;
+}
+.faq-main-title { font-family:var(--font-display); font-size:26px; color:var(--text); margin-bottom:8px; }
+.faq-main-desc  { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:16px; }
+.faq-item { padding:12px 0; border-bottom:1px solid var(--border); }
+.faq-q {
+  font-size:13px; font-weight:700; color:var(--accent2);
+  margin-bottom:5px; letter-spacing:0.03em;
+  display:flex; align-items:center; gap:7px;
+}
+.faq-q::before {
+  content:'Q'; font-family:var(--font-mono); font-size:8px;
+  color:var(--accent); border:1px solid var(--accent); padding:1px 3px; flex-shrink:0;
+}
+.faq-a { font-size:12px; color:var(--muted); line-height:1.6; padding-left:20px; }
+.faq-a code { font-family:var(--font-mono); font-size:10px; color:var(--accent2); background:rgba(255,255,255,0.05); padding:1px 4px; }
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+.toast-container {
+  position:fixed; top:20px; right:20px;
+  display:flex; flex-direction:column; gap:6px; z-index:9999;
+}
+.toast {
+  background:var(--surface2); border-left:3px solid var(--green);
+  padding:10px 14px; font-family:var(--font-mono); font-size:11px;
+  color:var(--text); min-width:220px;
+  animation:slideIn 0.25s ease; box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.toast.error { border-color:var(--red);    }
+.toast.warn  { border-color:var(--accent); }
+@keyframes slideIn{from{transform:translateX(20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* Page footer */
+.page-footer {
+  text-align:center; font-family:var(--font-mono); font-size:9px;
+  color:var(--dim); letter-spacing:0.15em;
+  padding:20px 32px; border-top:1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scroll-prog"></div>
+
+<!-- ═══════ GLOBAL HEADER ═══════ -->
+<header class="global-header">
+  <div class="gh-brand">
+    <span class="gh-name">TERRAE TEA</span>
+    <span class="gh-sep">|</span>
+    <span class="gh-sub">Sales &amp; Setup System</span>
+  </div>
+  <div class="gh-right">
+    <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+    <span id="gh-date">—</span>
+  </div>
+</header>
+
+<!-- ═══════ TAB NAVIGATION ═══════ -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('laporan')" id="tab-laporan">
+    <span class="tab-icon"></span> Laporan Penjualan
+  </button>
+  <button class="tab-btn" onclick="switchTab('panduan')" id="tab-panduan">
+    <span class="tab-icon"></span> Panduan Setup
+    <span class="tab-num">Google Sheets API</span>
+  </button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     PAGE 1 — LAPORAN PENJUALAN
+════════════════════════════════════════ -->
+<div class="tab-panel active" id="page-laporan">
+<div style="padding:28px 32px;">
+
+  <!-- Config Panel -->
+  <div class="config-panel">
+    <span class="config-label">// Sheets ID</span>
+    <input class="config-input" id="sheet-id" placeholder="Masukkan Spreadsheet ID...">
+    <span class="config-label">API Key</span>
+    <input class="config-input" id="api-key" placeholder="Masukkan Google API Key..." type="password">
+    <button class="btn btn-primary" onclick="connectSheet()">CONNECT</button>
+    <button class="btn btn-secondary" onclick="loadFromSheet()">LOAD DATA</button>
+    <span class="config-status disconnected" id="conn-status">● TIDAK TERHUBUNG</span>
+    <button class="btn btn-guide" onclick="switchTab('panduan')">? PANDUAN SETUP</button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="stat-card gold">
+      <div class="stat-label">// Total Profit Hari Ini</div>
+      <div class="stat-value" id="total-profit">Rp 0</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">// Total Terjual</div>
+      <div class="stat-value" id="total-terjual">0 botol</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">// Produk Habis</div>
+      <div class="stat-value" id="total-habis">0 item</div>
+    </div>
+    <div class="stat-card cyan">
+      <div class="stat-label">// Sisa Stok Total</div>
+      <div class="stat-value" id="total-sisa">0 botol</div>
+    </div>
+  </div>
+
+  <!-- Habis Strip -->
+  <div class="info-strip">
+    <span class="info-strip-label">⚠ HABIS :</span>
+    <span id="habis-info">—</span>
+  </div>
+
+  <!-- Table -->
+  <div class="section-hdr">
+    <span class="section-title">// Tabel Penjualan</span>
+    <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">Update otomatis saat input berubah</span>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Produk</th>
+          <th>Harga / Botol</th>
+          <th>Stok Hari Ini</th>
+          <th>Terjual</th>
+          <th>Sisa Stok</th>
+          <th>Profit</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-success" onclick="saveToSheet()">SIMPAN KE GOOGLE SHEETS</button>
+    <button class="btn btn-export"  onclick="exportAsImage()">EXPORT LAPORAN (GAMBAR)</button>
+    <button class="btn btn-secondary" onclick="resetAll()">↺ RESET</button>
+  </div>
+
+  <!-- Kondisi Penjualan -->
+  <div class="kondisi-box">
+    <div class="box-header">// Kondisi Penjualan Hari Ini</div>
+    <div id="kondisi-text">Masukkan data stok dan penjualan untuk melihat analisis kondisi...</div>
+  </div>
+
+  <!-- Report Snapshot -->
+  <div id="report-snapshot">
+    <div class="report-watermark">TERRAE TEA — LAPORAN HARIAN</div>
+    <div class="report-title-block">
+      <div class="report-brand">TERRAE TEA</div>
+      <div class="report-date-block">
+        <div id="rpt-date">—</div>
+        <div id="rpt-time">—</div>
+      </div>
+    </div>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Produk</th><th>Harga</th><th>Stok</th><th>Terjual</th><th>Sisa</th><th>Profit</th>
+        </tr>
+      </thead>
+      <tbody id="report-tbody"></tbody>
+    </table>
+    <div class="report-footer">
+      <div class="report-kondisi" id="rpt-kondisi">—</div>
+      <div class="report-total" id="rpt-total">Total Profit: Rp 0</div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div class="log-box">
+    <div class="box-header">// Activity Log</div>
+    <div id="log-list"></div>
+  </div>
+
+</div><!-- /padding wrapper -->
+</div><!-- /page-laporan -->
+
+
+<!-- ════════════════════════════════════════
+     PAGE 2 — PANDUAN SETUP
+════════════════════════════════════════ -->
+<div class="tab-panel" id="page-panduan">
+<div id="page-panduan-inner" style="display:grid;grid-template-columns:248px 1fr;min-height:calc(100vh - 108px);">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <span class="sb-label">Dokumentasi</span>
+      <div class="sb-title">TERRAE TEA</div>
+      <div class="sb-sub">Google Sheets API Setup Guide</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="nav-sec-label">// Persiapan</div>
+      <a class="nav-item" href="#overview" onclick="scrollToGuide('overview')">
+        <span class="nav-num">00</span><span class="nav-text">Overview & Prasyarat</span>
+        <span class="nav-badge badge-free">FREE</span>
+      </a>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="nav-sec-label">// Google Cloud</div>
+      <a class="nav-item" href="#step1" onclick="scrollToGuide('step1')">
+        <span class="nav-num">01</span><span class="nav-text">Buat Google Cloud Project</span>
+        <span class="nav-badge badge-free">FREE</span>
+      </a>
+      <a class="nav-item" href="#step2" onclick="scrollToGuide('step2')">
+        <span class="nav-num">02</span><span class="nav-text">Aktifkan Sheets API</span>
+        <span class="nav-badge badge-req">WAJIB</span>
+      </a>
+      <a class="nav-item" href="#step3" onclick="scrollToGuide('step3')">
+        <span class="nav-num">03</span><span class="nav-text">Buat API Key</span>
+        <span class="nav-badge badge-key">KEY</span>
+      </a>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="nav-sec-label">// Google Sheets</div>
+      <a class="nav-item" href="#step4" onclick="scrollToGuide('step4')">
+        <span class="nav-num">04</span><span class="nav-text">Siapkan Spreadsheet</span>
+      </a>
+      <a class="nav-item" href="#step5" onclick="scrollToGuide('step5')">
+        <span class="nav-num">05</span><span class="nav-text">Atur Sharing Access</span>
+      </a>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="nav-sec-label">// Aplikasi</div>
+      <a class="nav-item" href="#step6" onclick="scrollToGuide('step6')">
+        <span class="nav-num">06</span><span class="nav-text">Hubungkan ke Sistem</span>
+      </a>
+      <a class="nav-item" href="#faq" onclick="scrollToGuide('faq')">
+        <span class="nav-num">—</span><span class="nav-text">FAQ & Troubleshooting</span>
+      </a>
+    </div>
+    <div class="sb-footer">TERRAE TEA SYSTEM DOCS<br>Rev. 2024.1 · Bahasa Indonesia</div>
+  </aside>
+
+  <!-- Guide Main -->
+  <main class="guide-main" id="guide-scroll">
+
+    <!-- Header -->
+    <div style="margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+      <div class="ph-eyebrow">Panduan Setup</div>
+      <h1 class="page-title">Google Sheets<br>API Setup</h1>
+      <p class="page-desc">Ikuti panduan langkah demi langkah ini untuk menghubungkan sistem laporan TERRAE TEA ke Google Sheets agar data tersimpan otomatis dan permanen.</p>
+      <div class="time-est">⏱ Estimasi: <span>10–15 menit</span> &nbsp;·&nbsp; Level: <span>Pemula</span></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="overview" style="scroll-margin-top:120px;">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Apa yang kamu butuhkan</div><div class="div-line"></div></div>
+      <div class="ov-grid">
+        <div class="ov-card c-google"><span class="ov-icon"></span><div class="ov-title">Google Account</div><div class="ov-desc">Akun Gmail biasa — tidak perlu akun berbayar.</div></div>
+        <div class="ov-card c-sheets"><span class="ov-icon"></span><div class="ov-title">Google Sheets</div><div class="ov-desc">Spreadsheet baru sebagai database penjualan harian.</div></div>
+        <div class="ov-card c-api"   ><span class="ov-icon"></span><div class="ov-title">API Key</div><div class="ov-desc">Kunci akses gratis dari Google Cloud. Dibuat sekali, dipakai selamanya.</div></div>
+      </div>
+      <div class="callout callout-info">
+        <div class="callout-icon"></div>
+        <div class="callout-body">
+          <div class="callout-title">Biaya</div>
+          <div class="callout-text">Google Sheets API <strong>gratis</strong>. Batas gratis <code>100 req/100 detik</code> — lebih dari cukup untuk laporan harian.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step-section" id="step1">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 01</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">01</span></div>
+        <div><div class="step-category">Google Cloud Console</div><div class="step-title">Buat Google Cloud Project</div></div>
+      </div>
+      <div class="callout callout-info">
+        <div class="callout-icon"></div>
+        <div class="callout-body"><div class="callout-title">Buka URL ini</div><div class="callout-text">Pergi ke Google Cloud Console:</div></div>
+      </div>
+      <div class="url-box">
+        <span class="url-label">URL</span>
+        <span class="url-text">https://console.cloud.google.com</span>
+        <button class="url-copy" onclick="copyText('https://console.cloud.google.com',this)">COPY</button>
+      </div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Login dengan akun Google kamu</div><div class="substep-desc">Gunakan Gmail yang sama dengan Google Sheets. Setujui Terms of Service jika diminta. <strong>Tidak perlu kartu kredit.</strong></div></div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Klik "Select a project" di header</div><div class="substep-desc">Klik dropdown di atas, lalu klik <strong>NEW PROJECT</strong>.</div><div class="path-trail"><span class="path-item">Header</span><span class="path-arrow">›</span><span class="path-item active-path">Select a project</span><span class="path-arrow">›</span><span class="path-item">NEW PROJECT</span></div></div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Isi nama project dan klik CREATE</div><div class="substep-desc">Contoh nama: <em>terrae-tea-sales</em>. Klik <strong>CREATE</strong> dan tunggu project selesai dibuat.</div></div></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-section" id="step2">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 02</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">02</span></div>
+        <div><div class="step-category">APIs & Services</div><div class="step-title">Aktifkan Google Sheets API</div></div>
+      </div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Buka menu APIs & Services → Library</div><div class="substep-desc">Di sidebar kiri:</div><div class="path-trail"><span class="path-item">☰ Menu</span><span class="path-arrow">›</span><span class="path-item">APIs & Services</span><span class="path-arrow">›</span><span class="path-item active-path">Library</span></div></div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Cari "Google Sheets API"</div><div class="substep-desc">Ketik <em>Google Sheets API</em> di kolom pencarian, lalu klik hasilnya.</div></div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Klik tombol "ENABLE"</div><div class="substep-desc">Klik <strong>ENABLE</strong> dan tunggu hingga status API aktif.</div></div></div>
+      <div class="callout callout-success"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Konfirmasi</div><div class="callout-text">Kamu akan melihat tombol <strong>DISABLE</strong> dan statistik penggunaan — artinya API sudah aktif.</div></div></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-section" id="step3">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 03</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">03</span></div>
+        <div><div class="step-category">Credentials</div><div class="step-title">Buat API Key</div></div>
+      </div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Buka menu Credentials</div><div class="substep-desc">Dari sidebar:</div><div class="path-trail"><span class="path-item">APIs & Services</span><span class="path-arrow">›</span><span class="path-item active-path">Credentials</span></div></div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Klik "+ CREATE CREDENTIALS" → "API key"</div><div class="substep-desc">API key akan langsung dibuat dan ditampilkan dalam popup.</div></div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Salin dan simpan API Key</div>
+        <div class="code-block"><span class="code-comment">// Contoh format API Key</span>
+<span class="code-key">AIzaSy</span><span class="code-val">D1aBcDeFgHiJkLmNoPqRsTuVwXyZ12345678</span></div>
+        <div class="substep-desc">Salin key dan klik <strong>CLOSE</strong>.</div>
+      </div></div>
+      <div class="substep"><div class="substep-num">D</div><div><div class="substep-title">(Opsional) Batasi API Key</div><div class="substep-desc">Klik nama key → <strong>API restrictions</strong> → <strong>Restrict key</strong> → centang <strong>Google Sheets API</strong> → <strong>SAVE</strong>.</div></div></div>
+      <div class="callout callout-danger"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Keamanan</div><div class="callout-text"><strong>Jangan bagikan API Key ke orang lain.</strong> Jika bocor, hapus dan buat key baru. Sistem ini menyimpan key di <code>localStorage</code> browsermu saja.</div></div></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-section" id="step4">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 04</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">04</span></div>
+        <div><div class="step-category">Google Sheets</div><div class="step-title">Siapkan Spreadsheet</div></div>
+      </div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Buat Spreadsheet baru</div><div class="substep-desc">Buka sheets.google.com dan buat spreadsheet baru. Beri nama: <strong>TERRAE TEA — Laporan Penjualan</strong>.</div>
+        <div class="url-box"><span class="url-label">URL</span><span class="url-text">https://sheets.google.com</span><button class="url-copy" onclick="copyText('https://sheets.google.com',this)">COPY</button></div>
+      </div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Salin Spreadsheet ID dari URL</div>
+        <div class="code-block"><span class="code-comment">// Format URL Google Sheets</span>
+https://docs.google.com/spreadsheets/d/<span class="code-val">SPREADSHEET_ID_ADA_DI_SINI</span>/edit
+
+<span class="code-comment">// Contoh ID nyata:</span>
+<span class="code-key">1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms</span></div>
+        <div class="substep-desc">Bagian di antara <em>/d/</em> dan <em>/edit</em> adalah <strong>Spreadsheet ID</strong>-mu.</div>
+      </div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Pastikan nama tab adalah "Sheet1"</div><div class="substep-desc">Klik kanan tab bawah → <strong>Rename</strong> → ketik <em>Sheet1</em> → Enter.</div></div></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-section" id="step5">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 05</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">05</span></div>
+        <div><div class="step-category">Sharing & Permissions</div><div class="step-title">Atur Akses Spreadsheet</div></div>
+      </div>
+      <div class="callout callout-warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">Langkah Kritis</div><div class="callout-text">Ini langkah yang paling sering dilewati dan menyebabkan error. Spreadsheet <strong>harus</strong> dibagikan agar bisa diakses API.</div></div></div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Klik tombol "Share" di spreadsheet</div><div class="substep-desc">Di pojok kanan atas Google Sheets, klik <strong>Share</strong>.</div></div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Ubah ke "Anyone with the link — Editor"</div><div class="substep-desc">Di bagian <strong>General access</strong> → pilih <strong>Anyone with the link</strong> → role: <strong>Editor</strong>.</div><div class="path-trail"><span class="path-item">Share dialog</span><span class="path-arrow">›</span><span class="path-item">General access</span><span class="path-arrow">›</span><span class="path-item active-path">Anyone with the link — Editor</span></div></div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Klik "Done"</div><div class="substep-desc">Spreadsheet siap diakses via API.</div></div></div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-section" id="step6">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// Langkah 06</div><div class="div-line"></div></div>
+      <div class="step-hdr">
+        <div class="step-num-block"><span class="sn-label">STEP</span><span class="sn-num">06</span></div>
+        <div><div class="step-category">Sistem TERRAE TEA</div><div class="step-title">Hubungkan ke Aplikasi</div></div>
+      </div>
+      <div class="substep"><div class="substep-num">A</div><div><div class="substep-title">Buka tab "Laporan Penjualan"</div><div class="substep-desc">Klik tab <strong>📊 Laporan Penjualan</strong> di bagian atas halaman ini.</div></div></div>
+      <div class="substep"><div class="substep-num">B</div><div><div class="substep-title">Masukkan Spreadsheet ID dan API Key</div>
+        <div class="code-block"><span class="code-comment">// Isi kolom config di tab Laporan Penjualan</span>
+<span class="code-key">Spreadsheet ID :</span> <span class="code-val">1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms</span>
+<span class="code-key">API Key        :</span> <span class="code-val">AIzaSyD1aBcDeFgHiJkLmNoPqRsTuVwXyZ12345678</span></div>
+      </div></div>
+      <div class="substep"><div class="substep-num">C</div><div><div class="substep-title">Klik "CONNECT" dan verifikasi</div><div class="substep-desc">Jika berhasil, muncul notifikasi hijau: <em>"✓ Terhubung ke: [nama sheet]"</em>. Konfigurasi tersimpan otomatis.</div></div></div>
+      <div class="substep"><div class="substep-num">D</div><div><div class="substep-title">Input data → Klik "SIMPAN KE GOOGLE SHEETS"</div><div class="substep-desc">Data akan masuk ke Sheet1 dengan kolom: Tanggal, Waktu, Produk, Harga, Stok, Terjual, Sisa, Profit.</div></div></div>
+      <div class="callout callout-success"><div class="callout-icon"></div><div class="callout-body"><div class="callout-title">Setup Selesai!</div><div class="callout-text">Sistem TERRAE TEA sudah terhubung. Setiap simpan akan otomatis terekam di spreadsheet dengan timestamp lengkap.</div></div></div>
+
+      <!-- Quick Connect shortcut -->
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;margin-top:16px;">
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.2em;color:var(--accent);margin-bottom:10px;">// SHORTCUT — ISI LANGSUNG DARI SINI</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <input id="quick-sheet-id" class="config-input" style="flex:1;min-width:160px;" placeholder="Spreadsheet ID...">
+          <input id="quick-api-key"  class="config-input" style="flex:1;min-width:160px;" placeholder="API Key..." type="password">
+          <button class="btn btn-primary" onclick="quickConnect()">TERAPKAN & CONNECT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="sec-div"><div class="div-line"></div><div class="div-label">// Checklist Setup</div><div class="div-line"></div></div>
+    <ul class="checklist">
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Google Cloud Console dibuka dan login</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Project baru dibuat</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Google Sheets API diaktifkan</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">API Key dibuat dan disalin</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Spreadsheet baru dibuat</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Spreadsheet ID disalin dari URL</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Tab sheet dinamai "Sheet1"</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Sharing diatur: "Anyone with the link — Editor"</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">ID dan API Key dimasukkan, klik CONNECT ✓</span></li>
+      <li><div class="check-box" onclick="toggleCheck(this)"></div><span class="check-label">Test simpan berhasil, data muncul di Sheets ✓</span></li>
+    </ul>
+
+    <!-- FAQ -->
+    <div id="faq" style="scroll-margin-top:120px;">
+      <div class="sec-div"><div class="div-line"></div><div class="div-label">// FAQ & Troubleshooting</div><div class="div-line"></div></div>
+      <div class="faq-section">
+        <div class="faq-main-title">Troubleshooting</div>
+        <div class="faq-main-desc">Solusi untuk masalah paling umum saat setup.</div>
+        <div class="faq-item"><div class="faq-q">Error "403 Forbidden" saat CONNECT</div><div class="faq-a">API Key belum benar atau Google Sheets API belum diaktifkan. Selesaikan langkah 02 terlebih dahulu.</div></div>
+        <div class="faq-item"><div class="faq-q">Error "400 Bad Request" saat SIMPAN</div><div class="faq-a">Nama tab sheet salah. Pastikan tab bernama persis <code>Sheet1</code> (S kapital, tanpa spasi).</div></div>
+        <div class="faq-item"><div class="faq-q">Error "The caller does not have permission"</div><div class="faq-a">Spreadsheet belum dishare. Kembali ke langkah 05, ubah General Access ke <code>Anyone with the link — Editor</code>.</div></div>
+        <div class="faq-item"><div class="faq-q">CONNECT berhasil tapi SIMPAN gagal</div><div class="faq-a">Cek API Key restriction. Pastikan Spreadsheet ID tidak ada spasi ekstra di depan/belakang.</div></div>
+        <div class="faq-item"><div class="faq-q">LOAD DATA tidak menampilkan apa-apa</div><div class="faq-a">LOAD DATA hanya memuat data hari ini. Simpan dulu datanya sebelum dicoba di-load.</div></div>
+        <div class="faq-item"><div class="faq-q">API Key hilang setelah browser ditutup</div><div class="faq-a">Pastikan tidak menggunakan mode Incognito/Private. <code>localStorage</code> terhapus di mode private.</div></div>
+      </div>
+    </div>
+
+  </main><!-- /guide-main -->
+</div><!-- /page-panduan-inner -->
+</div><!-- /page-panduan -->
+
+<!-- Page Footer -->
+<div class="page-footer">TERRAE TEA SALES SYSTEM — © 2024 · DAILY REPORT &amp; SETUP GUIDE MODULE</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+/* ─── PRODUCTS ─── */
+const PRODUCTS = [
+  { id:'original', name:'TERRAE TEA Original', price:6000 },
+  { id:'cola',     name:'TERRAE TEA Cola',     price:7000 },
+  { id:'tarik',    name:'TERRAE TEA Tarik',     price:10000 },
+];
+let state = {};
+PRODUCTS.forEach(p => { state[p.id] = { stok:0, terjual:0 }; });
+
+/* ─── TAB SWITCHING ─── */
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ─── GUIDE NAV SCROLL ─── */
+function scrollToGuide(id) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 50);
+  // update active nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.getAttribute('href') === '#'+id);
+  });
+}
+
+/* ─── SCROLL PROGRESS ─── */
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('scroll-prog');
+  const scrolled = window.scrollY;
+  const max = document.body.scrollHeight - window.innerHeight;
+  el.style.width = max > 0 ? (scrolled/max*100)+'%' : '0%';
+});
+
+/* ─── DATE / TIME ─── */
+function updateDate() {
+  const now = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  const dateStr = now.toLocaleDateString('id-ID', opts);
+  document.getElementById('gh-date').textContent = dateStr;
+  document.getElementById('rpt-date').textContent = dateStr;
+  document.getElementById('rpt-time').textContent = 'Pukul ' + now.toLocaleTimeString('id-ID');
+}
+
+/* ─── INIT ─── */
+function init() {
+  renderTable(); renderReport(); updateDate();
+  setInterval(updateDate, 1000);
+  loadLocalStorage();
+  log('Sistem dimulai', 'success');
+}
+
+/* ─── RENDER TABLE ─── */
+function renderTable() {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  PRODUCTS.forEach(p => {
+    const s = state[p.id];
+    const sisa = Math.max(0, s.stok - s.terjual);
+    const profit = s.terjual * p.price;
+    let badgeClass='', badgeText='';
+    if (s.stok > 0) {
+      if (sisa === 0)          { badgeClass='badge-habis'; badgeText='HABIS'; }
+      else if (sisa <= 5)      { badgeClass='badge-low';   badgeText='HAMPIR HABIS'; }
+      else                     { badgeClass='badge-ok';    badgeText='TERSEDIA'; }
+    }
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="produk-name">${p.name}
+        ${badgeText ? `<br><span class="stok-badge ${badgeClass}">${badgeText}</span>` : ''}
+      </td>
+      <td class="harga-col">Rp ${p.price.toLocaleString('id-ID')}</td>
+      <td><input class="stok-input" type="number" min="0" value="${s.stok}"
+            onchange="updateState('${p.id}','stok',this.value)"></td>
+      <td><input class="terjual-input" type="number" min="0" value="${s.terjual}"
+            onchange="updateState('${p.id}','terjual',this.value)"></td>
+      <td style="font-family:var(--font-mono);font-size:13px;color:${sisa===0&&s.stok>0?'var(--red)':'var(--text)'}">
+        ${sisa} <span style="font-size:10px;color:var(--muted)">botol</span>
+      </td>
+      <td class="profit-col">Rp ${profit.toLocaleString('id-ID')}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateSummary();
+}
+
+function updateState(id, field, val) {
+  val = Math.max(0, parseInt(val)||0);
+  state[id][field] = val;
+  if (state[id].terjual > state[id].stok) state[id].terjual = state[id].stok;
+  renderTable(); renderReport(); updateKondisi(); saveLocalStorage();
+  log(`Update ${id}: ${field} = ${val}`);
+}
+
+/* ─── SUMMARY ─── */
+function updateSummary() {
+  let totalProfit=0, totalTerjual=0, habisCount=0, sisaTotal=0;
+  const habisNames=[];
+  PRODUCTS.forEach(p => {
+    const s = state[p.id];
+    const sisa = Math.max(0, s.stok-s.terjual);
+    totalProfit  += s.terjual * p.price;
+    totalTerjual += s.terjual;
+    sisaTotal    += sisa;
+    if (sisa===0 && s.stok>0) { habisCount++; habisNames.push(p.name); }
+  });
+  document.getElementById('total-profit').textContent  = 'Rp '+totalProfit.toLocaleString('id-ID');
+  document.getElementById('total-terjual').textContent = totalTerjual+' botol';
+  document.getElementById('total-habis').textContent   = habisCount+' item';
+  document.getElementById('total-sisa').textContent    = sisaTotal+' botol';
+  const el = document.getElementById('habis-info');
+  if (habisNames.length>0) { el.textContent=habisNames.join(', '); el.style.color='var(--red)'; }
+  else { el.textContent='Tidak ada produk yang habis hari ini ✓'; el.style.color='var(--green)'; }
+}
+
+/* ─── KONDISI ─── */
+function updateKondisi() {
+  let totalProfit=0, totalTerjual=0, habisCount=0;
+  const habisNames=[], terjualParts=[];
+  PRODUCTS.forEach(p => {
+    const s=state[p.id], sisa=Math.max(0,s.stok-s.terjual);
+    totalProfit  += s.terjual*p.price;
+    totalTerjual += s.terjual;
+    if (sisa===0&&s.stok>0){ habisCount++; habisNames.push(p.name.replace('TERRAE TEA ','')); }
+    if (s.terjual>0) terjualParts.push(`<span class="kondisi-highlight">${s.terjual} botol</span> ${p.name.replace('TERRAE TEA ','')}`);
+  });
+  let k='⚡ ';
+  if (totalTerjual===0) {
+    k+='Belum ada penjualan tercatat. Masukkan data stok dan jumlah terjual untuk memulai laporan.';
+  } else {
+    const pct=habisCount/PRODUCTS.length;
+    if      (pct>=0.66) k+=`<span class="kondisi-bad">RAMAI — Penjualan sangat tinggi!</span> `;
+    else if (pct>=0.33) k+=`<span class="kondisi-warn">NORMAL — Penjualan berjalan baik.</span> `;
+    else                k+=`<span class="kondisi-good">BAIK — Stok masih mencukupi.</span> `;
+    k+=`Total terjual: ${terjualParts.join(', ')}. `;
+    k+=`Pemasukan: <span class="kondisi-highlight">Rp ${totalProfit.toLocaleString('id-ID')}</span>. `;
+    k+= habisNames.length>0
+      ? `Produk <span class="kondisi-bad">habis</span>: ${habisNames.join(', ')}. Segera restok!`
+      : `<span class="kondisi-good">Semua produk masih tersedia.</span>`;
+  }
+  document.getElementById('kondisi-text').innerHTML = k;
+  document.getElementById('rpt-kondisi').textContent = k.replace(/<[^>]*>/g,'');
+}
+
+/* ─── REPORT ─── */
+function renderReport() {
+  const tbody=document.getElementById('report-tbody');
+  tbody.innerHTML='';
+  let totalProfit=0;
+  PRODUCTS.forEach(p => {
+    const s=state[p.id], sisa=Math.max(0,s.stok-s.terjual), profit=s.terjual*p.price;
+    totalProfit+=profit;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${p.name}</td>
+      <td style="font-family:var(--font-mono);font-size:11px;">Rp ${p.price.toLocaleString('id-ID')}</td>
+      <td>${s.stok}</td><td>${s.terjual}</td>
+      <td style="color:${sisa===0&&s.stok>0?'var(--red)':'inherit'}">${sisa}</td>
+      <td>Rp ${profit.toLocaleString('id-ID')}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('rpt-total').textContent='Total Profit: Rp '+totalProfit.toLocaleString('id-ID');
+}
+
+/* ─── EXPORT IMAGE ─── */
+function exportAsImage() {
+  const el=document.getElementById('report-snapshot');
+  showToast('Membuat gambar laporan...','warn');
+  html2canvas(el,{backgroundColor:'#141410',scale:2,useCORS:true}).then(canvas=>{
+    const link=document.createElement('a');
+    const dateStr=new Date().toLocaleDateString('id-ID').replace(/\//g,'-');
+    link.download=`TERRAE-TEA-Laporan-${dateStr}.png`;
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    showToast('Laporan berhasil disimpan sebagai gambar!','success');
+    log('Laporan diekspor sebagai gambar','success');
+  }).catch(err=>{ showToast('Gagal export: '+err.message,'error'); log('Export gagal','error'); });
+}
+
+/* ─── GOOGLE SHEETS ─── */
+async function connectSheet() {
+  const sheetId=document.getElementById('sheet-id').value.trim();
+  const apiKey =document.getElementById('api-key').value.trim();
+  if (!sheetId||!apiKey){ showToast('Masukkan Spreadsheet ID dan API Key!','error'); return; }
+  showToast('Menghubungkan...','warn');
+  try {
+    const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
+    const data=await res.json();
+    if (data.error) throw new Error(data.error.message);
+    showToast('✓ Terhubung ke: '+data.properties.title,'success');
+    log('Terhubung ke: '+data.properties.title,'success');
+    setConnStatus(true, data.properties.title);
+    localStorage.setItem('terrae_sheet_id', sheetId);
+    localStorage.setItem('terrae_api_key', btoa(apiKey));
+  } catch(e){ showToast('Gagal: '+e.message,'error'); log('Connect gagal: '+e.message,'error'); setConnStatus(false); }
+}
+
+function setConnStatus(ok, title='') {
+  const el=document.getElementById('conn-status');
+  if (ok) { el.textContent='● TERHUBUNG'+(title?' — '+title:''); el.className='config-status connected'; }
+  else     { el.textContent='● TIDAK TERHUBUNG'; el.className='config-status disconnected'; }
+}
+
+async function saveToSheet() {
+  const sheetId=document.getElementById('sheet-id').value.trim();
+  const apiKey =document.getElementById('api-key').value.trim();
+  if (!sheetId||!apiKey){ showToast('Hubungkan Google Sheets dulu!','error'); return; }
+  const now=new Date();
+  const rows=[['Tanggal','Waktu','Produk','Harga/Botol','Stok Hari Ini','Terjual','Sisa','Profit']];
+  PRODUCTS.forEach(p=>{
+    const s=state[p.id], sisa=Math.max(0,s.stok-s.terjual);
+    rows.push([now.toLocaleDateString('id-ID'), now.toLocaleTimeString('id-ID'),
+               p.name, p.price, s.stok, s.terjual, sisa, s.terjual*p.price]);
+  });
+  let tp=0,tt=0;
+  PRODUCTS.forEach(p=>{tp+=state[p.id].terjual*p.price;tt+=state[p.id].terjual;});
+  rows.push(['','','TOTAL','','',tt,'',tp]);
+  showToast('Menyimpan...','warn');
+  try {
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:rows})});
+    const data=await res.json();
+    if (data.error) throw new Error(data.error.message);
+    showToast('✓ Tersimpan ke Google Sheets!','success');
+    log('Data disimpan ke Sheets','success');
+  } catch(e){ showToast('Gagal: '+e.message,'error'); log('Simpan gagal: '+e.message,'error'); }
+}
+
+async function loadFromSheet() {
+  const sheetId=document.getElementById('sheet-id').value.trim();
+  const apiKey =document.getElementById('api-key').value.trim();
+  if (!sheetId||!apiKey){ showToast('Hubungkan dulu!','error'); return; }
+  showToast('Memuat data...','warn');
+  try {
+    const res=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:H200?key=${apiKey}`);
+    const data=await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const rows=(data.values||[]).reverse();
+    const today=new Date().toLocaleDateString('id-ID');
+    rows.forEach(row=>{
+      if (row[0]!==today) return;
+      PRODUCTS.forEach(p=>{ if (row[2]===p.name){ state[p.id].stok=parseInt(row[4])||0; state[p.id].terjual=parseInt(row[5])||0; } });
+    });
+    renderTable(); renderReport(); updateKondisi();
+    showToast('✓ Data hari ini dimuat!','success'); log('Data dimuat dari Sheets','success');
+  } catch(e){ showToast('Gagal load: '+e.message,'error'); log('Load gagal: '+e.message,'error'); }
+}
+
+/* ─── QUICK CONNECT (from guide) ─── */
+function quickConnect() {
+  const sid=document.getElementById('quick-sheet-id').value.trim();
+  const key=document.getElementById('quick-api-key').value.trim();
+  if (!sid||!key){ showToast('Isi Spreadsheet ID dan API Key!','error'); return; }
+  document.getElementById('sheet-id').value=sid;
+  document.getElementById('api-key').value=key;
+  switchTab('laporan');
+  setTimeout(connectSheet, 300);
+}
+
+/* ─── LOCAL STORAGE ─── */
+function saveLocalStorage() {
+  localStorage.setItem('terrae_state', JSON.stringify(state));
+}
+function loadLocalStorage() {
+  const s=localStorage.getItem('terrae_state');
+  if (s){ try{ const p=JSON.parse(s); Object.keys(p).forEach(k=>{ if(state[k]) state[k]=p[k]; }); renderTable(); renderReport(); updateKondisi(); } catch(e){} }
+  const sid=localStorage.getItem('terrae_sheet_id');
+  if (sid) document.getElementById('sheet-id').value=sid;
+  const key=localStorage.getItem('terrae_api_key');
+  if (key){ try{ document.getElementById('api-key').value=atob(key); } catch(e){} }
+}
+
+function resetAll() {
+  if (!confirm('Reset semua data hari ini?')) return;
+  PRODUCTS.forEach(p=>{ state[p.id]={stok:0,terjual:0}; });
+  renderTable(); renderReport(); updateKondisi(); saveLocalStorage();
+  showToast('Data direset','warn'); log('Reset','warn');
+}
+
+/* ─── TOAST ─── */
+function showToast(msg,type='success'){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`; t.textContent=msg; c.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+/* ─── LOG ─── */
+function log(msg,type='default'){
+  const list=document.getElementById('log-list');
+  const now=new Date().toLocaleTimeString('id-ID');
+  const e=document.createElement('div');
+  e.className=`log-entry ${type==='default'?'':'log-'+type}`;
+  e.innerHTML=`<span class="log-time">[${now}]</span><span class="log-msg">${msg}</span>`;
+  list.prepend(e);
+  if (list.children.length>50) list.lastChild.remove();
+}
+
+/* ─── COPY ─── */
+function copyText(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.textContent; btn.textContent='COPIED!'; btn.style.color='var(--green)';
+    setTimeout(()=>{ btn.textContent=o; btn.style.color=''; },1500);
+  });
+}
+
+/* ─── CHECKLIST ─── */
+function toggleCheck(box){
+  box.classList.toggle('checked');
+  const label=box.nextElementSibling;
+  if (box.classList.contains('checked')){ box.textContent='✓'; label.classList.add('done'); }
+  else { box.textContent=''; label.classList.remove('done'); }
+}
+
+/* ─── START ─── */
+init();
+</script>
+</body>
+</html>
